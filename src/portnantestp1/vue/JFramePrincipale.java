@@ -1,0 +1,717 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * JFramePrincipale.java
+ *
+ * Created on 28 oct. 2010, 19:39:19
+ */
+
+package portnantestp1.vue;
+
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import portnantestp1.controleur.Historique;
+import portnantestp1.controleur.Navire;
+import portnantestp1.controleur.Ports;
+import portnantestp1.controleur.ZoneStockage;
+import portnantestp1.controleur.ZoneStockageD;
+
+/**
+ *
+ * @author pierre
+ */
+public class JFramePrincipale extends javax.swing.JFrame implements ActionListener
+{
+    // Creation Variable
+    private jFrameStockage jFS;
+    private jFrameNavire jFN;
+    private jFrameMatiere jFM;
+
+    /** Creates new form JFramePrincipale */
+    public JFramePrincipale()
+    {
+        initComponents();
+
+        //DBO
+        Ports.connection();
+
+        // Forme
+        jTableMatiere.setVisible(false);
+        btnSupprNavire.setEnabled(false);
+        btnDechNavire.setEnabled(false);
+        btnSupprStockage.setEnabled(false);
+        btnViderStockage.setEnabled(false);
+        if(Ports.getListHistorique().size()==0)
+            btnSupprHisto.setVisible(false);
+
+        // MAJ
+        majTableNavires();
+        majTableZoneStockage();
+        majTableHisto();
+    }
+
+
+    //######################
+    // Methodes principales
+    //######################
+    private void majTableNavires()
+    {
+        List lst = Ports.getListNavire();
+        if(!lst.isEmpty())
+        {
+            ((DefaultTableModel) jTableNavireNDch.getModel()).setRowCount(lst.size());
+
+            // Raz
+            for(int y=0 ; y<jTableNavireNDch.getRowCount() ; y++)
+            {
+                jTableNavireNDch.setValueAt(null, y, 0);
+                jTableNavireNDch.setValueAt(null, y, 1);
+                jTableNavireNDch.setValueAt(null, y, 2);
+                jTableNavireNDch.setValueAt(null, y, 3);
+                jTableNavireNDch.setValueAt(null, y, 4);
+            }
+
+            // on rempli la jTable à partir de la mapNavire
+            for(int i=0 ; i<lst.size() ; i++)
+            {
+                Navire temp = (Navire) lst.get(i);
+                jTableNavireNDch.setValueAt(temp.getNumNavire(), i, 0);
+                jTableNavireNDch.setValueAt(temp.getNomNavire().toString(), i, 1);
+                jTableNavireNDch.setValueAt(temp.getLibelleFret().toString(), i, 2);
+                jTableNavireNDch.setValueAt(temp.getQteFret(), i, 3);
+                jTableNavireNDch.setValueAt(temp.getType(), i, 4);
+            }
+        }
+    }
+
+    private void majTableZoneStockage()
+    {
+        List<ZoneStockage> lst = Ports.getListZonesStockage();
+        ((DefaultTableModel)jTableZoneStockage.getModel()).setRowCount(lst.size());
+    
+        for(int a=0 ; a<jTableZoneStockage.getRowCount() ; a++)
+        {
+            jTableZoneStockage.setValueAt(null, a, 0);
+            jTableZoneStockage.setValueAt(null, a, 1);
+            jTableZoneStockage.setValueAt(null, a, 2);
+            jTableZoneStockage.setValueAt(null, a, 3);
+        }
+
+        for(int z=0 ; z<lst.size() ; z++)
+        {
+            ZoneStockage temp = lst.get(z);
+
+            jTableZoneStockage.setValueAt(temp.getNum(), z, 0);
+            jTableZoneStockage.setValueAt(temp.getCapaDispo(), z, 1);
+            jTableZoneStockage.setValueAt(temp.getCapaMax(), z, 2);
+            jTableZoneStockage.setValueAt(temp.estDangeureux(), z, 3);
+        }
+    }
+
+    private void majTableHisto()
+    {
+        List<Historique> lst = Ports.getListHistorique();
+        ((DefaultTableModel)jTableHisto.getModel()).setRowCount(lst.size());
+
+        for(int i=0 ; i<lst.size() ; i++)
+        {
+            jTableHisto.setValueAt(null, i, 0);
+            jTableHisto.setValueAt(null, i, 1);
+            jTableHisto.setValueAt(null, i, 2);
+            jTableHisto.setValueAt(null, i, 3);
+            jTableHisto.setValueAt(null, i, 4);
+        }
+
+        for(int i=0 ; i<lst.size() ; i++)
+        {
+            Historique temp = lst.get(i);
+            jTableHisto.setValueAt(temp.getDate(), i, 0);
+            jTableHisto.setValueAt(temp.getnumLloyds(), i, 1);
+            jTableHisto.setValueAt(temp.getnumStock(), i, 2);
+            jTableHisto.setValueAt(temp.getQte(), i, 3);
+            jTableHisto.setValueAt(temp.getMatiere(), i, 4);
+        }
+    }
+
+
+    //enregistrement zone des stockage cree dans la frameZoneStockage
+    public void actionPerformed(ActionEvent e)
+    {
+        if(jFS instanceof jFrameStockage)
+        {
+            majTableZoneStockage();
+        }
+
+        if(jFN instanceof jFrameNavire)
+        {
+            majTableNavires();
+        }
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableNavireNDch = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableZoneStockage = new javax.swing.JTable();
+        lblQstNumNavire2 = new javax.swing.JLabel();
+        btnSupprNavire = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTableMatiere = new javax.swing.JTable();
+        btnDechNavire = new javax.swing.JButton();
+        btnSupprStockage = new javax.swing.JButton();
+        btnViderStockage = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTableHisto = new javax.swing.JTable();
+        btnSupprHisto = new javax.swing.JButton();
+        lblQstNumNavire3 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jItemStats = new javax.swing.JMenuItem();
+        menuItemNavireAjouter = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        menuItemNavireActualiser = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        menuItemStockageAjouter = new javax.swing.JMenuItem();
+        menuItemStockageActualiser = new javax.swing.JMenuItem();
+        menuItemMatieresGerer = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        jTableNavireNDch.setFont(new java.awt.Font("Utopia", 0, 11));
+        jTableNavireNDch.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "N° Lloyds", "Nom", "Libelle Fret", "Qte Fret", "Matière"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableNavireNDch.getTableHeader().setReorderingAllowed(false);
+        jTableNavireNDch.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableNavireNDchMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableNavireNDch);
+        jTableNavireNDch.getColumnModel().getColumn(0).setResizable(false);
+        jTableNavireNDch.getColumnModel().getColumn(1).setResizable(false);
+        jTableNavireNDch.getColumnModel().getColumn(2).setResizable(false);
+        jTableNavireNDch.getColumnModel().getColumn(3).setResizable(false);
+        jTableNavireNDch.getColumnModel().getColumn(4).setResizable(false);
+
+        jLabel6.setFont(new java.awt.Font("Utopia", 1, 11));
+        jLabel6.setText("Zone de Stockage (Chosissez une zone pour plus de détail)");
+
+        jTableZoneStockage.setFont(new java.awt.Font("Utopia", 0, 11));
+        jTableZoneStockage.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "N°", "Capacité Dispo", "Capacité Max", "Dangeureux"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableZoneStockage.getTableHeader().setReorderingAllowed(false);
+        jTableZoneStockage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableZoneStockageMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTableZoneStockage);
+        jTableZoneStockage.getColumnModel().getColumn(0).setResizable(false);
+        jTableZoneStockage.getColumnModel().getColumn(1).setResizable(false);
+        jTableZoneStockage.getColumnModel().getColumn(2).setResizable(false);
+        jTableZoneStockage.getColumnModel().getColumn(3).setResizable(false);
+
+        lblQstNumNavire2.setFont(new java.awt.Font("Utopia", 1, 11));
+        lblQstNumNavire2.setText("Liste des Navires en attente de dechargement");
+
+        btnSupprNavire.setFont(new java.awt.Font("Utopia", 1, 11));
+        btnSupprNavire.setText("Supprimer");
+        btnSupprNavire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSupprNavireActionPerformed(evt);
+            }
+        });
+
+        jTableMatiere.setFont(new java.awt.Font("Utopia", 0, 11));
+        jTableMatiere.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Libelle"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTableMatiere);
+        jTableMatiere.getColumnModel().getColumn(0).setResizable(false);
+
+        btnDechNavire.setFont(new java.awt.Font("Utopia", 1, 11));
+        btnDechNavire.setText("Décharger");
+        btnDechNavire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDechNavireActionPerformed(evt);
+            }
+        });
+
+        btnSupprStockage.setFont(new java.awt.Font("Utopia", 1, 11));
+        btnSupprStockage.setText("Supprimer");
+        btnSupprStockage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSupprStockageActionPerformed(evt);
+            }
+        });
+
+        btnViderStockage.setFont(new java.awt.Font("Utopia", 1, 11));
+        btnViderStockage.setText("Vider");
+        btnViderStockage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViderStockageActionPerformed(evt);
+            }
+        });
+
+        jTableHisto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Date", "NumLloyds", "NumStock", "Qte", "Matiere"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableHisto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableHistoMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTableHisto);
+        jTableHisto.getColumnModel().getColumn(0).setResizable(false);
+        jTableHisto.getColumnModel().getColumn(1).setResizable(false);
+        jTableHisto.getColumnModel().getColumn(2).setResizable(false);
+        jTableHisto.getColumnModel().getColumn(3).setResizable(false);
+        jTableHisto.getColumnModel().getColumn(4).setResizable(false);
+
+        btnSupprHisto.setFont(new java.awt.Font("Utopia", 1, 11));
+        btnSupprHisto.setText("Supprimer");
+        btnSupprHisto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSupprHistoActionPerformed(evt);
+            }
+        });
+
+        lblQstNumNavire3.setFont(new java.awt.Font("Utopia", 1, 11));
+        lblQstNumNavire3.setText("Historique de déchargement des navires");
+
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jMenuBar1.setFont(new java.awt.Font("Utopia", 1, 11));
+
+        jMenu2.setText("Outils");
+        jMenu2.setFont(new java.awt.Font("Utopia", 1, 12));
+
+        jItemStats.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jItemStats.setFont(new java.awt.Font("Utopia", 1, 12));
+        jItemStats.setText("Stats");
+        jItemStats.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jItemStatsActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jItemStats);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.SHIFT_MASK));
+        jMenuItem1.setFont(new java.awt.Font("Utopia", 1, 12));
+        jMenuItem1.setText("Ajouter");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuItemNavireAjouter.add(jMenuItem1);
+
+        menuItemNavireActualiser.setFont(new java.awt.Font("Utopia", 1, 12));
+        menuItemNavireActualiser.setText("Actualiser");
+        menuItemNavireActualiser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemNavireActualiserActionPerformed(evt);
+            }
+        });
+        menuItemNavireAjouter.add(menuItemNavireActualiser);
+
+        jMenuBar1.add(menuItemNavireAjouter);
+
+        jMenu3.setText("Zone Stockage");
+        jMenu3.setFont(new java.awt.Font("Utopia", 1, 12));
+
+        menuItemStockageAjouter.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.SHIFT_MASK));
+        menuItemStockageAjouter.setFont(new java.awt.Font("Utopia", 1, 12));
+        menuItemStockageAjouter.setText("Ajouter");
+        menuItemStockageAjouter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemStockageAjouterActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuItemStockageAjouter);
+
+        menuItemStockageActualiser.setFont(new java.awt.Font("Utopia", 1, 12));
+        menuItemStockageActualiser.setText("Actualiser");
+        menuItemStockageActualiser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemStockageActualiserActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuItemStockageActualiser);
+
+        jMenuBar1.add(jMenu3);
+
+        menuItemMatieresGerer.setText("Matières");
+        menuItemMatieresGerer.setFont(new java.awt.Font("Utopia", 1, 12));
+
+        jMenuItem5.setFont(new java.awt.Font("Utopia", 1, 12));
+        jMenuItem5.setText("Gérer");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        menuItemMatieresGerer.add(jMenuItem5);
+
+        jMenuBar1.add(menuItemMatieresGerer);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(lblQstNumNavire2, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnSupprNavire, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnDechNavire, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblQstNumNavire3, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane4, 0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnSupprStockage, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnViderStockage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(btnSupprHisto, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblQstNumNavire2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, 0, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSupprNavire)
+                    .addComponent(btnDechNavire)
+                    .addComponent(btnSupprStockage)
+                    .addComponent(btnViderStockage))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblQstNumNavire3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, 0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSupprHisto)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    
+    //Bouton enregistrer sur evenement ActionPerformed
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jTableZoneStockageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableZoneStockageMouseClicked
+        for(int x=0 ; x<jTableMatiere.getRowCount() ; x++)
+        {
+            jTableMatiere.setValueAt(null, x, 0);
+        }
+        
+        try
+        {
+            int num = ((Integer)jTableZoneStockage.getValueAt(jTableZoneStockage.getSelectedRow(), 0));
+            ZoneStockage zs = Ports.getZoneStockage(num);
+
+            if(zs instanceof ZoneStockageD)
+            {
+                ArrayList<String> tempArray = ((ZoneStockageD)zs).getMatiereD();
+            
+                DefaultTableModel dtm = (DefaultTableModel) jTableMatiere.getModel();
+                dtm.setRowCount(tempArray.size());
+                jTableMatiere.setModel(dtm);
+
+                for(int i=0 ; i<tempArray.size() ; i++)
+                {
+                    jTableMatiere.setValueAt(tempArray.get(i), i, 0);
+                }
+
+                jTableMatiere.setVisible(true);
+            }
+            else
+            {
+                jTableMatiere.setVisible(false);
+            }
+            btnSupprStockage.setEnabled(true);
+            btnViderStockage.setEnabled(true);
+        }
+        catch(Exception e)
+        {
+            jTableMatiere.setVisible(false);
+            btnSupprStockage.setEnabled(false);
+            btnViderStockage.setEnabled(false);
+        }
+    }//GEN-LAST:event_jTableZoneStockageMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        Ports.decoDBO();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jTableNavireNDchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableNavireNDchMouseClicked
+        btnSupprNavire.setEnabled(true);
+        btnDechNavire.setEnabled(true);
+    }//GEN-LAST:event_jTableNavireNDchMouseClicked
+
+    private void btnSupprNavireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprNavireActionPerformed
+        if(jTableNavireNDch.getSelectedRowCount()==1)
+        {
+            Ports.supprimeNavire((String)jTableNavireNDch.getValueAt(jTableNavireNDch.getSelectedRow(), 0));
+            majTableNavires();
+        }
+        else
+        {
+            btnSupprNavire.setEnabled(false);
+            btnDechNavire.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnSupprNavireActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        jFN = new jFrameNavire();
+        jFN.setVisible(true);
+        jFN.addFermerListener(this);
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void menuItemStockageAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStockageAjouterActionPerformed
+        jFS = new jFrameStockage();
+        jFS.setVisible(true);
+        jFS.addFermerListener(this);
+    }//GEN-LAST:event_menuItemStockageAjouterActionPerformed
+
+    private void menuItemNavireActualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNavireActualiserActionPerformed
+        majTableNavires();
+    }//GEN-LAST:event_menuItemNavireActualiserActionPerformed
+
+    private void menuItemStockageActualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStockageActualiserActionPerformed
+        majTableZoneStockage();
+    }//GEN-LAST:event_menuItemStockageActualiserActionPerformed
+
+    private void btnDechNavireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDechNavireActionPerformed
+        Ports.dechargement((jTableNavireNDch.getValueAt(jTableNavireNDch.getSelectedRow(), 0)).toString());
+        majTableNavires();
+        majTableZoneStockage();
+        majTableHisto();
+    }//GEN-LAST:event_btnDechNavireActionPerformed
+
+    private void btnSupprStockageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprStockageActionPerformed
+        if(jTableZoneStockage.getSelectedRowCount()==1)
+        {
+            Ports.supprimeZoneStockage((Integer)(jTableZoneStockage.getValueAt(jTableZoneStockage.getSelectedRow(), 0)));
+            majTableZoneStockage();
+        }
+        else
+        {
+            btnSupprStockage.setEnabled(false);
+            btnViderStockage.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnSupprStockageActionPerformed
+
+    private void btnViderStockageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViderStockageActionPerformed
+        int num = ((Integer)jTableZoneStockage.getValueAt(jTableZoneStockage.getSelectedRow(), 0));
+        Ports.getZoneStockage(num).vider();
+        majTableZoneStockage();
+    }//GEN-LAST:event_btnViderStockageActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        jFM = new jFrameMatiere();
+        jFM.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jItemStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemStatsActionPerformed
+        jFrameStat JFStats = new jFrameStat();
+        JFStats.show();
+    }//GEN-LAST:event_jItemStatsActionPerformed
+
+    private void btnSupprHistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprHistoActionPerformed
+        if(jTableHisto.getModel().getRowCount() != 0)
+        {
+            int xy = jTableHisto.getSelectedRow();
+            Ports.removeHistorique(jTableHisto.getValueAt(xy, 0).toString(), jTableHisto.getValueAt(xy, 1).toString(), (Integer)jTableHisto.getValueAt(xy, 2));
+            majTableHisto();
+        }
+        else
+            btnSupprHisto.setVisible(false);
+    }//GEN-LAST:event_btnSupprHistoActionPerformed
+
+    private void jTableHistoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableHistoMouseClicked
+        btnSupprHisto.setVisible(true);
+    }//GEN-LAST:event_jTableHistoMouseClicked
+
+    /**;
+    * @param args the command line arguments
+    */
+    public static void main(String args[])
+    {
+        java.awt.EventQueue.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                new JFramePrincipale().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDechNavire;
+    private javax.swing.JButton btnSupprHisto;
+    private javax.swing.JButton btnSupprNavire;
+    private javax.swing.JButton btnSupprStockage;
+    private javax.swing.JButton btnViderStockage;
+    private javax.swing.JMenuItem jItemStats;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTableHisto;
+    private javax.swing.JTable jTableMatiere;
+    private javax.swing.JTable jTableNavireNDch;
+    private javax.swing.JTable jTableZoneStockage;
+    private javax.swing.JLabel lblQstNumNavire2;
+    private javax.swing.JLabel lblQstNumNavire3;
+    private javax.swing.JMenu menuItemMatieresGerer;
+    private javax.swing.JMenuItem menuItemNavireActualiser;
+    private javax.swing.JMenu menuItemNavireAjouter;
+    private javax.swing.JMenuItem menuItemStockageActualiser;
+    private javax.swing.JMenuItem menuItemStockageAjouter;
+    // End of variables declaration//GEN-END:variables
+
+}
